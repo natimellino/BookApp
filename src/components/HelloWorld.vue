@@ -1,58 +1,185 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <v-card class="mx-auto overflow-hidden" height="auto" max-width="500">
+    <v-system-bar color="deep-purple darken-3"></v-system-bar>
+
+    <v-app-bar color="deep-purple accent-4" dark prominent>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <v-toolbar-title> My Books </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+        <!-- btn-fix pq esta re bugueado y se queda resaltado despues de ser seleccionado el boton -->
+        <v-btn class="btn-fix" icon>
+          <v-icon> mdi-magnify </v-icon>
+        </v-btn>
+
+        <!-- coso raro -->
+        <!-- <v-btn icon>
+          <v-icon>mdi-filter</v-icon>
+        </v-btn> -->
+
+        <!-- tres puntitos verticales -->
+        <!-- <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn> -->
+  
+    </v-app-bar>
+
+    <v-navigation-drawer v-model="drawer" absolute bottom temporary>
+      <v-list nav dense>
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--accent-4"
+        >
+          <v-list-item>
+            <v-list-item-title> About </v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Bar</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Fizz</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Buzz</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+
+    <div class="text-center">
+      <v-tabs fixed-tabs>
+        <v-tab> This Month </v-tab>
+        <!-- Add Book Button -->
+        
+
+        <v-tab-item>
+          
+          <br />
+          <v-card
+            v-for="{ id, title, author } in books"
+            :key="id"
+            elevation="8"
+            outlined
+            class="mb-2"
+          >
+            <v-card-title> {{ title }} </v-card-title>
+            <v-card-subtitle align="Left"> {{ author }} </v-card-subtitle>
+            <v-card-actions>
+              <v-col class="text-left">
+                <font-awesome-icon icon="calendar-alt" /> Jan 14 - Jan 20
+              </v-col>
+              <!-- delete button -->
+              <v-col class="text-right">
+                <v-btn class="btn-fix" text> 
+                  <font-awesome-icon v-on:click="deleteBook(id)" icon="trash-alt" />
+                </v-btn> 
+              </v-col>
+            </v-card-actions>
+          </v-card>
+
+          <!-- Add Book Button -->
+          <v-btn class="btn-fix"
+                 dark
+                 fab
+                 fixed
+                 bottom
+                 right
+                 color="indigo">
+            <v-icon dark>
+              mdi-plus
+            </v-icon>
+          </v-btn>
+
+        </v-tab-item>
+
+        <v-tab> This Year </v-tab>
+        <v-tab-item>
+          <br />
+          <v-card
+            v-for="{ id, title, author } in books"
+            :key="id"
+            elevation="8"
+            outlined
+            class="mb-2"
+          >
+            <v-card-title> {{ title }} </v-card-title>
+            <v-card-subtitle align="Left"> {{ author }} </v-card-subtitle>
+            <v-card-actions>
+              <v-col class="text-left">
+                <font-awesome-icon icon="calendar-alt" /> Jan 14 - Jan 20
+              </v-col>
+
+              <!-- Delete button -->
+              <v-col class="text-right">
+                <!-- <v-btn fab> -->
+                  <font-awesome-icon icon="trash-alt" />
+                <!-- </v-btn> -->
+              </v-col>
+            </v-card-actions>
+          </v-card>
+        </v-tab-item>
+
+      </v-tabs>
+    </div>
+  </v-card>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  name: "HelloWorld",
+
+  data: () => ({
+    drawer: false,
+    group: null,
+    books: [ 
+      {
+        id: 0,
+        author: "Stephen King",
+        title: "El Resplandor",
+      },
+      {
+        id: 1,
+        author: "Paul Auster",
+        title: "El País de las Últimas Cosas",
+      },
+      {
+        id: 2,
+        author: "George Orwell",
+        title: "1984",
+      },
+      {
+        id: 3,
+        author: "Aldous Huxley",
+        title: "Un Mundo Feliz",
+      },
+      {
+        id: 4,
+        author: "Isaac Asimov",
+        title: "El Fin de la Eternidad",
+      },
+    ],
+  }),
+
+  methods: {
+    deleteBook: function (index)
+    {
+      this.$delete(this.books, index)
+    }
+  },
+
+  watch: {
+    group() {
+      this.drawer = false;
+    },
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+<style>
+  .btn-fix:focus::before { opacity: 0 !important; }
 </style>
