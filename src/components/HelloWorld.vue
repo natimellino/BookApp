@@ -82,8 +82,30 @@
             </v-card-actions>
           </v-card>
 
+          <!-- Overlay for displaying AddBook Form -->
+          <v-overlay :absolute="absolute"
+                     :value="overlay">
+
+            <div>
+              <!-- Title -->
+              <v-text-field label="Title"
+                            :rules="rules"
+                            v-model="title"
+                            hide-details="auto">
+              </v-text-field>
+              <!-- Author -->
+              <v-text-field label="Author" v-model="author" ></v-text-field>
+            </div>
+
+            <v-btn color="success"
+                   @click="addBook()">
+              Save
+            </v-btn>
+          </v-overlay>
+
           <!-- Add Book Button -->
           <v-btn class="btn-fix"
+                 @click="showForm()"
                  dark
                  fab
                  fixed
@@ -134,8 +156,17 @@ export default {
   name: "HelloWorld",
 
   data: () => ({
+    absolute: true,
+    overlay: false, 
     drawer: false,
     group: null,
+    title: "",
+    author: "",
+    id: 4,
+    rules: [
+        value => !!value || 'Required.',
+        value => (value && value.length >= 3) || 'Min 3 characters',
+    ],
     books: [ 
       {
         id: 0,
@@ -168,7 +199,21 @@ export default {
   methods: {
     deleteBook: function (index)
     {
-      this.$delete(this.books, index)
+      this.$delete(this.books, index);
+      this.id --;
+    },
+    addBook: function ()
+    {
+      this.id++;
+      var data = [{id: this.id, author: this.author, title: this.title}];
+      this.books = this.books.concat(data);
+      this.overlay = false;
+    },
+    showForm: function()
+    {
+      this.title = "";
+      this.author = ""; 
+      this.overlay = !this.overlay
     }
   },
 
